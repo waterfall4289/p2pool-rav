@@ -7,6 +7,7 @@
 /_trial_temp.lock
 Makefile.local
 .cache/
-.pkg/
+.pkglist
+.pyenv/
 .coverage
 build/
