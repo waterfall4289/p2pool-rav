@@ -6,6 +6,11 @@ from twisted.internet import defer
 from . import data
 from p2pool.util import math, pack
 
+try:
+    from gmpy2 import mpq
+except ImportError:
+    from fractions import Fraction as mpq
+
 nets = dict(
     bitcoin=math.Object(
         P2P_PREFIX='f9beb4d9'.decode('hex'),
