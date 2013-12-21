@@ -320,6 +320,24 @@ nets = dict(
         ANNOUNCE_CHANNEL='#p2pool-alt',
         VERSION_CHECK=lambda v: True,
     ),
+    lottocoin=math.Object( #384
+        PARENT=networks.nets['lottocoin'],
+        SHARE_PERIOD=10, # seconds target spacing
+        CHAIN_LENGTH=12*60*60//10, # shares
+        REAL_CHAIN_LENGTH=12*60*60//10, # shares
+        TARGET_LOOKBEHIND=20, # shares to count pool diff
+        SPREAD=10, # payout up to xx blocks
+        IDENTIFIER='a5a5fdfdb6b6f1f1'.decode('hex'),
+        PREFIX='f1f1b6b6fdfda5a5'.decode('hex'),
+        P2P_PORT=8384,
+        MIN_TARGET=0,
+        MAX_TARGET=2**256//2**20 - 1,
+        PERSIST=False,
+        WORKER_PORT=9384,
+        BOOTSTRAP_ADDRS='doge.dtdns.net doge.gotgeeks.com'.split(' '),
+        ANNOUNCE_CHANNEL='#p2pool-alt',
+        VERSION_CHECK=lambda v: True,
+    ),
 
 
 )
