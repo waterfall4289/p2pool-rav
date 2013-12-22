@@ -320,6 +320,24 @@ nets = dict(
         ANNOUNCE_CHANNEL='#p2pool-alt',
         VERSION_CHECK=lambda v: True,
     ),
+    grandcoin=math.Object(
+        PARENT=networks.nets['grandcoin'],
+        SHARE_PERIOD=12, # seconds target spacing
+        CHAIN_LENGTH=12*60*60//12, # shares
+        REAL_CHAIN_LENGTH=12*60*60//12, # shares
+        TARGET_LOOKBEHIND=30, # pool share target
+        SPREAD=10, # max blocks payout
+        IDENTIFIER='fdfdc1c1a5a5dbdb'.decode('hex'),
+        PREFIX='dbdba5a5c1c1fdfd'.decode('hex'),
+        P2P_PORT=8378,
+        MIN_TARGET=0,
+        MAX_TARGET=2**256//2**20 - 1,
+        PERSIST=False,
+        WORKER_PORT=9378,
+        BOOTSTRAP_ADDRS='doge.gotgeeks.com doge.dtdns.net pool.hostv.pl rav3n.dtdns.net'.split(' '),
+        ANNOUNCE_CHANNEL='#p2pool-alt',
+        VERSION_CHECK=lambda v: True,
+    ),
 
 
 )

@@ -364,6 +364,27 @@ nets = dict(
         DUMB_SCRYPT_DIFF=2**16,
         DUST_THRESHOLD=0.03e8,
     ),
+    grandcoin=math.Object(
+        P2P_PREFIX='fdc1a5db'.decode('hex'),
+        P2P_PORT=12377,
+        ADDRESS_VERSION=97,
+        RPC_PORT=12378,
+        RPC_CHECK=defer.inlineCallbacks(lambda bitcoind: defer.returnValue(
+            'grandcoinaddress' in (yield bitcoind.rpc_help()) and
+            not (yield bitcoind.rpc_getinfo())['testnet']
+        )),
+        SUBSIDY_FUNC=lambda height: 1000*100000000,
+        POW_FUNC=lambda data: pack.IntType(256).unpack(__import__('ltc_scrypt').getPoWHash(data)),
+        BLOCK_PERIOD=45, # s
+        SYMBOL='DGC',
+        CONF_FILE_FUNC=lambda: os.path.join(os.path.join(os.environ['APPDATA'], 'GrandCoin') if platform.system() == 'Windows' else os.path.expanduser('~/Library/Application Support/Grandcoin/') if platform.system() == 'Darwin' else os.path.expanduser('~/.grandcoin'), 'grandcoin.conf'),
+        BLOCK_EXPLORER_URL_PREFIX='http://grandcoin.org/blocks/index.php?block_hash=',
+        ADDRESS_EXPLORER_URL_PREFIX='http://grandcoin.org/blocks/index.php?address=', #nope, not supported!
+        TX_EXPLORER_URL_PREFIX='http://grandcoin.org/blocks/index.php?transaction=',
+        SANE_TARGET_RANGE=(2**256//1000000000 - 1, 2**256//1000 - 1),
+        DUMB_SCRYPT_DIFF=2**16,
+        DUST_THRESHOLD=0.03e8,
+    ),
 
 )
 for net_name, net in nets.iteritems():
