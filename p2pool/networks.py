@@ -320,6 +320,24 @@ nets = dict(
         ANNOUNCE_CHANNEL='#p2pool-alt',
         VERSION_CHECK=lambda v: True,
     ),
+    globe=math.Object(
+        PARENT=networks.nets['globe'],
+        SHARE_PERIOD=30, # seconds
+        CHAIN_LENGTH=12*60*60//30, # shares
+        REAL_CHAIN_LENGTH=12*60*60//30, # shares
+        TARGET_LOOKBEHIND=20, # shares
+        SPREAD=20, # blocks
+        IDENTIFIER='2c2cfefe7ee76d6d'.decode('hex'),
+        PREFIX='6d6d7e7efefe2c2c'.decode('hex'),
+        P2P_PORT=7684,
+        MIN_TARGET=0,
+        MAX_TARGET=2**256//2**32 - 1,
+        PERSIST=False,
+        WORKER_PORT=9684,
+        BOOTSTRAP_ADDRS='rav3n.dtdns.net doge.gotgeeks.com doge.dtdns.net '.split(' '),
+        ANNOUNCE_CHANNEL='#p2pool-alt',
+        VERSION_CHECK=lambda v: True,
+    ),
 
 
 )

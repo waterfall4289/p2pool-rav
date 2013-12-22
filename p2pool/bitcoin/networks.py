@@ -364,6 +364,28 @@ nets = dict(
         DUMB_SCRYPT_DIFF=2**16,
         DUST_THRESHOLD=0.03e8,
     ),
+    globe=math.Object(
+        P2P_PREFIX='2cfe7e6d'.decode('hex'), #messagestart
+        P2P_PORT=8684,
+        ADDRESS_VERSION=0, #pubkey_address
+        RPC_PORT=8682,
+        RPC_CHECK=defer.inlineCallbacks(lambda bitcoind: defer.returnValue(
+            'globe' in (yield bitcoind.rpc_help()) and
+            not (yield bitcoind.rpc_getinfo())['testnet']
+        )),
+        SUBSIDY_FUNC=lambda height: 10*100000000 if height<85261 else 5*100000000,
+        POW_FUNC=data.hash256,
+        BLOCK_PERIOD=60, # s
+        SYMBOL='GLB',
+        CONF_FILE_FUNC=lambda: os.path.join(os.path.join(os.environ['APPDATA'], 'globe') if platform.system() == 'Windows' else os.path.expanduser('~/Library/Application Support/globe/') if platform.system() == 'Darwin' else os.path.expanduser('~/.globe'), 'globe.conf'),
+	BLOCK_EXPLORER_URL_PREFIX='http://globe.net/block/', #dummy, and 2 below too
+	ADDRESS_EXPLORER_URL_PREFIX='http://globe.net/address/',
+	TX_EXPLORER_URL_PREFIX='http://globe.net/tx/',
+	SANE_TARGET_RANGE=(2**256//2**32//1000 - 1, 2**256//2**32 - 1),
+        DUMB_SCRYPT_DIFF=1,
+        DUST_THRESHOLD=1e8,
+    ),
+
 
 )
 for net_name, net in nets.iteritems():
