@@ -51,6 +51,29 @@ def get_web_root(wb, datadir_path, bitcoind_getinfo_var, stop_event=variable.Eve
     
     web_root = resource.Resource()
     
+    def get_pool_miner_share():
+        m1, m2 = wb.get_local_rates()
+
+        all_payable_share_counts = {}
+        node_miner_payable_share_counts = {}
+        now = time.localtime(time.time())
+        for v_share in node.tracker.verified.items:
+            this_share = node.tracker.items[v_share]
+            payout_address=bitcoin_data.script2_to_address(this_share.new_script , node.net.PARENT)
+            if ((this_share.timestamp+43200) >= time.time()):
+                if all_payable_share_counts.has_key(payout_address):
+                    all_payable_share_counts[payout_address]+=1
+                else:
+                    all_payable_share_counts[payout_address]=1
+
+        for node_miner_addr in m1:
+            if all_payable_share_counts.has_key(node_miner_addr):
+                node_miner_payable_share_counts[node_miner_addr]=all_payable_share_counts[node_miner_addr]
+            else:
+                node_miner_payable_share_counts[node_miner_addr]=0
+
+        return node_miner_payable_share_counts
+    
     def get_users():
         height, last = node.tracker.get_height_and_last(node.best_share_var.value)
         weights, total_weight, donation_weight = node.tracker.get_cumulative_weights(node.best_share_var.value, min(height, 720), 65535*2**256)
@@ -197,7 +220,8 @@ def get_web_root(wb, datadir_path, bitcoind_getinfo_var, stop_event=variable.Eve
     web_root.putChild('user_stales', WebInterface(lambda: dict((bitcoin_data.pubkey_hash_to_address(ph, node.net.PARENT), prop) for ph, prop in
         p2pool_data.get_user_stale_props(node.tracker, node.best_share_var.value, node.tracker.get_height(node.best_share_var.value)).iteritems())))
     web_root.putChild('fee', WebInterface(lambda: wb.worker_fee))
-    web_root.putChild('current_payouts', WebInterface(lambda: dict((bitcoin_data.script2_to_address(script, node.net.PARENT), value/1e8) for script, value in node.get_current_txouts().iteritems())))
+#    web_root.putChild('current_payouts', WebInterface(lambda: dict((bitcoin_data.script2_to_address(script, node.net.PARENT), value/1e8) for script, value in node.get_current_txouts().iteritems())))
+    web_root.putChild('current_payouts', WebInterface(get_pool_miner_share))
     web_root.putChild('patron_sendmany', WebInterface(get_patron_sendmany, 'text/plain'))
     web_root.putChild('global_stats', WebInterface(get_global_stats))
     web_root.putChild('local_stats', WebInterface(get_local_stats))
